@@ -1,0 +1,14 @@
+C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\bin\Debug\net9.0\ContactBookApp.exe
+C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\bin\Debug\net9.0\ContactBookApp.deps.json
+C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\bin\Debug\net9.0\ContactBookApp.runtimeconfig.json
+C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\bin\Debug\net9.0\ContactBookApp.dll
+C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\bin\Debug\net9.0\ContactBookApp.pdb
+C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\obj\Debug\net9.0\ContactBookApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\obj\Debug\net9.0\ContactBookApp.AssemblyInfoInputs.cache
+C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\obj\Debug\net9.0\ContactBookApp.AssemblyInfo.cs
+C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\obj\Debug\net9.0\ContactBookApp.csproj.CoreCompileInputs.cache
+C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\obj\Debug\net9.0\ContactBookApp.dll
+C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\obj\Debug\net9.0\refint\ContactBookApp.dll
+C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\obj\Debug\net9.0\ContactBookApp.pdb
+C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\obj\Debug\net9.0\ContactBookApp.genruntimeconfig.cache
+C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\obj\Debug\net9.0\ref\ContactBookApp.dll
