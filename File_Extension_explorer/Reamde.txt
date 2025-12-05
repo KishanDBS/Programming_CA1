@@ -1,0 +1,6 @@
+Key Features
+• 	Dictionary: Efficient lookup for extensions.
+• 	Case-insensitive search: Users can type  or .
+• 	Graceful handling: If extension not found, it responds politely.
+• 	Normalization: Adds  if user forgets (typing  instead of ).
+• 	Exit option: User can type  to quit.

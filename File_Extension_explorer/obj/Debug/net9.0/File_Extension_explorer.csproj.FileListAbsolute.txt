@@ -1,0 +1,14 @@
+C:\Users\Kishan\Documents\CA_Programming\File_Extension_explorer\bin\Debug\net9.0\File_Extension_explorer.exe
+C:\Users\Kishan\Documents\CA_Programming\File_Extension_explorer\bin\Debug\net9.0\File_Extension_explorer.deps.json
+C:\Users\Kishan\Documents\CA_Programming\File_Extension_explorer\bin\Debug\net9.0\File_Extension_explorer.runtimeconfig.json
+C:\Users\Kishan\Documents\CA_Programming\File_Extension_explorer\bin\Debug\net9.0\File_Extension_explorer.dll
+C:\Users\Kishan\Documents\CA_Programming\File_Extension_explorer\bin\Debug\net9.0\File_Extension_explorer.pdb
+C:\Users\Kishan\Documents\CA_Programming\File_Extension_explorer\obj\Debug\net9.0\File_Extension_explorer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Kishan\Documents\CA_Programming\File_Extension_explorer\obj\Debug\net9.0\File_Extension_explorer.AssemblyInfoInputs.cache
+C:\Users\Kishan\Documents\CA_Programming\File_Extension_explorer\obj\Debug\net9.0\File_Extension_explorer.AssemblyInfo.cs
+C:\Users\Kishan\Documents\CA_Programming\File_Extension_explorer\obj\Debug\net9.0\File_Extension_explorer.csproj.CoreCompileInputs.cache
+C:\Users\Kishan\Documents\CA_Programming\File_Extension_explorer\obj\Debug\net9.0\File_Extension_explorer.dll
+C:\Users\Kishan\Documents\CA_Programming\File_Extension_explorer\obj\Debug\net9.0\refint\File_Extension_explorer.dll
+C:\Users\Kishan\Documents\CA_Programming\File_Extension_explorer\obj\Debug\net9.0\File_Extension_explorer.pdb
+C:\Users\Kishan\Documents\CA_Programming\File_Extension_explorer\obj\Debug\net9.0\File_Extension_explorer.genruntimeconfig.cache
+C:\Users\Kishan\Documents\CA_Programming\File_Extension_explorer\obj\Debug\net9.0\ref\File_Extension_explorer.dll
