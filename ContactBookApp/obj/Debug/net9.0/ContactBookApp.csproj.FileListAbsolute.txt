@@ -12,3 +12,4 @@ C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\obj\Debug\net9.0\refint\
 C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\obj\Debug\net9.0\ContactBookApp.pdb
 C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\obj\Debug\net9.0\ContactBookApp.genruntimeconfig.cache
 C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\obj\Debug\net9.0\ref\ContactBookApp.dll
+C:\Users\Kishan\Documents\CA_Programming\ContactBookApp\obj\Debug\net9.0\ContactBookApp.sourcelink.json

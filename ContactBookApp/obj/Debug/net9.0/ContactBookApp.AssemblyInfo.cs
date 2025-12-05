@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ContactBookApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ab299df7104082b1ece63f02d9068dc89768ed3c")]
 [assembly: System.Reflection.AssemblyProductAttribute("ContactBookApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ContactBookApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
