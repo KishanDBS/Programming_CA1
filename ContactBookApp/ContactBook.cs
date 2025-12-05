@@ -1,27 +1,78 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 
 namespace ContactBookApp
 {
-    /// <summary>
-    /// Manages a collection of Contact objects.
-    /// Demonstrates object relationships (ContactBook "has-a" Contact).
-    /// </summary>
     public class ContactBook
     {
         private List<Contact> contacts = new List<Contact>();
+        private string filePath = "contacts.json";
 
-        /// <summary>
-        /// Adds a new contact to the list.
-        /// </summary>
+        // Load contacts from JSON file
+      public void LoadContacts()
+{
+    if (File.Exists(filePath))
+    {
+        string json = File.ReadAllText(filePath);
+        if (!string.IsNullOrWhiteSpace(json))
+        {
+            try
+            {
+                // Try to deserialize
+                var loadedContacts = JsonSerializer.Deserialize<List<Contact>>(json);
+
+                // Validate each contact safely
+                contacts = new List<Contact>();
+                foreach (var c in loadedContacts)
+                {
+                    try
+                    {
+                        // Re-run constructor validation
+                        Contact validContact = new Contact(
+                            c.FirstName,
+                            c.LastName,
+                            c.Company,
+                            c.MobileNumber,
+                            c.Email,
+                            c.Birthdate
+                        );
+                        contacts.Add(validContact);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Console.WriteLine($"Skipped invalid contact: {ex.Message}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading contacts.json: {ex.Message}");
+                contacts = new List<Contact>(); // fallback
+            }
+        }
+        else
+        {
+            contacts = new List<Contact>(); // empty file
+        }
+    }
+}
+
+        // Save contacts to JSON file
+        public void SaveContacts()
+        {
+            string json = JsonSerializer.Serialize(contacts, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(filePath, json);
+        }
+
         public void AddContact(Contact contact)
         {
-            // Prevent duplicate mobile numbers
             foreach (var c in contacts)
             {
                 if (c.MobileNumber == contact.MobileNumber)
                 {
-                    Console.WriteLine("A contact with this mobile number already exists.");
+                    Console.WriteLine("Error: Duplicate mobile number.");
                     return;
                 }
             }
@@ -29,31 +80,40 @@ namespace ContactBookApp
             Console.WriteLine("Contact added successfully.");
         }
 
-        /// <summary>
-        /// Displays all contacts (handles edge cases: none, one, many).
-        /// </summary>
         public void ShowAllContacts()
+    {
+        if (contacts.Count == 0)
+        {
+            Console.WriteLine("No contacts found.");
+            return;
+        }
+
+        Console.WriteLine("--- All Contacts ---");
+
+        // Print table header
+        Console.WriteLine(
+            $"{"Name",-20} {"Company",-15} {"Mobile",-12} {"Email",-25} {"Birthdate",-12}"
+        );
+        Console.WriteLine(new string('-', 90)); // separator line
+
+        // Print each contact in table format
+        foreach (var contact in contacts)
+        {
+            string fullName = $"{contact.FirstName} {contact.LastName}";
+            Console.WriteLine(
+                $"{fullName,-20} {contact.Company,-15} {contact.MobileNumber,-12} {contact.Email,-25} {contact.Birthdate.ToShortDateString(),-12}"
+            );
+        }
+}
+
+        public void ShowContactDetails(string mobileNumber)
         {
             if (contacts.Count == 0)
             {
-                Console.WriteLine("No contacts found. Please add a contact first.");
+                Console.WriteLine("No contacts available.");
                 return;
             }
 
-            Console.WriteLine("--- All Contacts ---");
-            int index = 1;
-            foreach (var contact in contacts)
-            {
-                Console.WriteLine($"{index}: {contact.ShowDetails(false)}");
-                index++;
-            }
-        }
-
-        /// <summary>
-        /// Finds and displays details of a contact by mobile number.
-        /// </summary>
-        public void ShowContactDetails(string mobileNumber)
-        {
             var contact = contacts.Find(c => c.MobileNumber == mobileNumber);
             if (contact != null)
                 Console.WriteLine(contact.ShowDetails(true));
@@ -61,11 +121,14 @@ namespace ContactBookApp
                 Console.WriteLine("Contact not found.");
         }
 
-        /// <summary>
-        /// Updates a contact’s details.
-        /// </summary>
         public void UpdateContact(string mobileNumber, Contact updatedContact)
         {
+            if (contacts.Count == 0)
+            {
+                Console.WriteLine("No contacts available to update.");
+                return;
+            }
+
             var contact = contacts.Find(c => c.MobileNumber == mobileNumber);
             if (contact != null)
             {
@@ -83,11 +146,14 @@ namespace ContactBookApp
             }
         }
 
-        /// <summary>
-        /// Deletes a contact by mobile number.
-        /// </summary>
         public void DeleteContact(string mobileNumber)
         {
+            if (contacts.Count == 0)
+            {
+                Console.WriteLine("No contacts available to delete.");
+                return;
+            }
+
             var contact = contacts.Find(c => c.MobileNumber == mobileNumber);
             if (contact != null)
             {

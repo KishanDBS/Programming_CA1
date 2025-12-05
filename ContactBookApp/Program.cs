@@ -5,35 +5,105 @@ namespace ContactBookApp
 {
     class Program
     {
-        // Helper method: Validates input against a regex pattern.
-        // Keeps prompting until the user enters a valid value.
-        static string GetValidInput(string prompt, string pattern, string errorMessage)
+        /// <summary>
+        /// Generic input validator using regex.
+        /// - Prompts user for input.
+        /// - Validates against regex pattern.
+        /// - Shows error if invalid.
+        /// - Allows "X" to cancel input.
+        /// - Limits invalid attempts to 3.
+        /// Returns string or null if cancelled/too many invalid attempts.
+        /// </summary>
+        static string? GetValidInput(string prompt, string pattern, string errorMessage)
         {
-            string input;
+            string? input;
+            int attempts = 0;
+
             while (true)
             {
                 Console.Write(prompt);
                 input = Console.ReadLine();
 
-                // Check input against regex pattern
-                if (Regex.IsMatch(input, pattern))
+                // Allow user to cancel
+                if (input?.Trim().ToUpper() == "X")
                 {
-                    return input; // Valid input, return it
+                    Console.WriteLine("Cancelled input. Returning to menu...");
+                    return null;
+                }
+
+                // Validate against regex
+                if (!string.IsNullOrEmpty(input) && Regex.IsMatch(input, pattern))
+                {
+                    return input; // Valid
                 }
                 else
                 {
-                    Console.WriteLine(errorMessage); // Show error and re-prompt
+                    Console.WriteLine(errorMessage);
+                    attempts++;
+
+                    if (attempts >= 3)
+                    {
+                        Console.WriteLine("Too many invalid attempts. Returning to menu...");
+                        return null;
+                    }
                 }
             }
         }
 
-        // Helper method: Validates date input using regex + DateTime.TryParse
-        // Accepts formats like yyyy-MM-dd or dd/MM/yyyy
-        static DateTime GetValidDate(string prompt)
+        /// <summary>
+        /// Mobile number validator.
+        /// - Must be 9 digits, not starting with 0.
+        /// - Allows "X" to cancel.
+        /// - Limits invalid attempts to 3.
+        /// Returns string or null if cancelled/too many invalid attempts.
+        /// </summary>
+        static string? GetValidMobile(string prompt)
         {
-            string input;
+            string? input;
+            int attempts = 0;
+
+            while (true)
+            {
+                Console.Write(prompt);
+                input = Console.ReadLine();
+
+                if (input?.Trim().ToUpper() == "X")
+                {
+                    Console.WriteLine("Cancelled input. Returning to menu...");
+                    return null;
+                }
+
+                if (!string.IsNullOrEmpty(input) && Regex.IsMatch(input, @"^[1-9][0-9]{8}$"))
+                {
+                    return input; // Valid mobile
+                }
+                else
+                {
+                    Console.WriteLine("Invalid mobile number. Must be 9 digits, not starting with 0.");
+                    attempts++;
+
+                    if (attempts >= 3)
+                    {
+                        Console.WriteLine("Too many invalid attempts. Returning to menu...");
+                        return null;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Date validator.
+        /// - Accepts yyyy-MM-dd or dd/MM/yyyy formats.
+        /// - Uses regex + DateTime.TryParse.
+        /// - Allows "X" to cancel.
+        /// - Limits invalid attempts to 3.
+        /// Returns DateTime? (nullable) so caller can handle cancellation.
+        /// </summary>
+        static DateTime? GetValidDate(string prompt)
+        {
+            string? input;
             DateTime date;
-            // Regex allows either dd/MM/yyyy or yyyy-MM-dd formats
+            int attempts = 0;
             string pattern = @"^\d{1,2}[-/ ]\d{1,2}[-/ ]\d{4}$|^\d{4}[-/ ]\d{1,2}[-/ ]\d{1,2}$";
 
             while (true)
@@ -41,26 +111,38 @@ namespace ContactBookApp
                 Console.Write(prompt);
                 input = Console.ReadLine();
 
-                // Check regex first, then try parsing
-                if (Regex.IsMatch(input, pattern) && DateTime.TryParse(input, out date))
+                if (input?.Trim().ToUpper() == "X")
+                {
+                    Console.WriteLine("Cancelled input. Returning to menu...");
+                    return null;
+                }
+
+                if (!string.IsNullOrEmpty(input) && Regex.IsMatch(input, pattern) && DateTime.TryParse(input, out date))
                 {
                     return date; // Valid date
                 }
                 else
                 {
-                    Console.WriteLine("Invalid date format. Please enter a valid date (e.g., 1990-01-01 or 01/01/1990).");
+                    Console.WriteLine("Invalid date format. Please enter again (yyyy-MM-dd or dd/MM/yyyy).");
+                    attempts++;
+
+                    if (attempts >= 3)
+                    {
+                        Console.WriteLine("Too many invalid attempts. Returning to menu...");
+                        return null;
+                    }
                 }
             }
         }
 
         static void Main(string[] args)
         {
-            ContactBook book = new ContactBook(); // ContactBook manages all contacts
-            int choice;
+            ContactBook book = new ContactBook();
+            book.LoadContacts(); // Load contacts from JSON
 
+            int choice;
             do
             {
-                // Display menu options
                 Console.WriteLine("\n--- Main Menu ---");
                 Console.WriteLine("1: Add Contact");
                 Console.WriteLine("2: Show All Contacts");
@@ -70,33 +152,42 @@ namespace ContactBookApp
                 Console.WriteLine("0: Exit");
                 Console.Write("Enter your choice: ");
 
-                // Validate menu choice input
                 if (!int.TryParse(Console.ReadLine(), out choice))
                 {
                     Console.WriteLine("Invalid input. Please enter a number.");
-                    continue; // Go back to menu
+                    continue;
                 }
 
                 switch (choice)
                 {
                     case 1: // Add Contact
-                        // Validate each field using regex
-                        string firstName = GetValidInput("First Name: ", @"^[A-Za-z][A-Za-z\s\-]*$", "Invalid first name. Use only letters.");
-                        string lastName = GetValidInput("Last Name: ", @"^[A-Za-z][A-Za-z\s\-]*$", "Invalid last name. Use only letters.");
-                        string company = GetValidInput("Company: ", @"^[A-Za-z0-9\s\.\-&]+$", "Invalid company name.");
-                        string mobile = GetValidInput("Mobile Number (9 digits, not starting with 0): ", @"^[1-9][0-9]{8}$", "Invalid mobile number format.");
-                        string email = GetValidInput("Email: ", @"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$", "Invalid email format.");
-                        DateTime birthdate = GetValidDate("Birthdate (yyyy-MM-dd or dd/MM/yyyy): ");
+                        string? firstName = GetValidInput("First Name: ", @"^[A-Za-z][A-Za-z\s\-]*$", "Invalid first name.");
+                        if (firstName == null) break;
+
+                        string? lastName = GetValidInput("Last Name: ", @"^[A-Za-z][A-Za-z\s\-]*$", "Invalid last name.");
+                        if (lastName == null) break;
+
+                        string? company = GetValidInput("Company: ", @"^[A-Za-z0-9\s\.\-&]+$", "Invalid company name.");
+                        if (company == null) break;
+
+                        string? mobile = GetValidMobile("Mobile (9 digits, not starting with 0): ");
+                        if (mobile == null) break;
+
+                        string? email = GetValidInput("Email: ", @"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$", "Invalid email.");
+                        if (email == null) break;
+
+                        DateTime? birthdate = GetValidDate("Birthdate (yyyy-MM-dd or dd/MM/yyyy): ");
+                        if (birthdate == null) break;
 
                         try
                         {
-                            // Create new contact object
-                            Contact newContact = new Contact(firstName, lastName, company, mobile, email, birthdate);
-                            book.AddContact(newContact); // Add to ContactBook
+                            Contact newContact = new Contact(firstName, lastName, company, mobile, email, birthdate.Value);
+                            book.AddContact(newContact);
+                            book.SaveContacts();
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine(ex.Message); // Show validation errors from Contact class
+                            Console.WriteLine($"Error: {ex.Message}");
                         }
                         break;
 
@@ -105,59 +196,73 @@ namespace ContactBookApp
                         break;
 
                     case 3: // Show Contact Details
-                        string searchMobile = GetValidInput("Enter mobile number to view details: ", @"^[1-9][0-9]{8}$", "Invalid mobile number format.");
-                        book.ShowContactDetails(searchMobile);
+                        string? searchMobile = GetValidMobile("Enter mobile to view details (or X to cancel): ");
+                        if (searchMobile != null)
+                            book.ShowContactDetails(searchMobile);
                         break;
 
                     case 4: // Update Contact
-                        string oldMobile = GetValidInput("Enter mobile number to update: ", @"^[1-9][0-9]{8}$", "Invalid mobile number format.");
-                        string newFirst = GetValidInput("New First Name: ", @"^[A-Za-z][A-Za-z\s\-]*$", "Invalid first name.");
-                        string newLast = GetValidInput("New Last Name: ", @"^[A-Za-z][A-Za-z\s\-]*$", "Invalid last name.");
-                        string newCompany = GetValidInput("New Company: ", @"^[A-Za-z0-9\s\.\-&]+$", "Invalid company name.");
-                        string newMobile = GetValidInput("New Mobile Number: ", @"^[1-9][0-9]{8}$", "Invalid mobile number format.");
-                        string newEmail = GetValidInput("New Email: ", @"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$", "Invalid email format.");
-                        DateTime newBirth = GetValidDate("New Birthdate (yyyy-MM-dd or dd/MM/yyyy): ");
+                        string? oldMobile = GetValidMobile("Enter mobile to update (or X to cancel): ");
+                        if (oldMobile == null) break;
+
+                        string? newFirst = GetValidInput("New First Name: ", @"^[A-Za-z][A-Za-z\s\-]*$", "Invalid first name.");
+                        if (newFirst == null) break;
+
+                        string? newLast = GetValidInput("New Last Name: ", @"^[A-Za-z][A-Za-z\s\-]*$", "Invalid last name.");
+                        if (newLast == null) break;
+
+                        string? newCompany = GetValidInput("New Company: ", @"^[A-Za-z0-9\s\.\-&]+$", "Invalid company.");
+                        if (newCompany == null) break;
+
+                        string? newMobile = GetValidMobile("New Mobile (or X to cancel): ");
+                        if (newMobile == null) break;
+
+                        string? newEmail = GetValidInput("New Email: ", @"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$", "Invalid email.");
+                        if (newEmail == null) break;
+
+                        DateTime? newBirth = GetValidDate("New Birthdate: ");
+                        if (newBirth == null) break;
 
                         try
                         {
-                            // Create updated contact object
-                            Contact updated = new Contact(newFirst, newLast, newCompany, newMobile, newEmail, newBirth);
-                            book.UpdateContact(oldMobile, updated); // Update existing contact
+                            Contact updated = new Contact(newFirst, newLast, newCompany, newMobile, newEmail, newBirth.Value);
+                            book.UpdateContact(oldMobile, updated);
+                            book.SaveContacts();
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine(ex.Message);
+                            Console.WriteLine($"Error: {ex.Message}");
                         }
                         break;
 
-                    case 5:
-                        // Ask for mobile number to delete
-                        string deleteMobile = GetValidInput("Enter mobile number to delete: ", @"^[1-9][0-9]{8}$", "Invalid mobile number format.");
+                    case 5: // Delete Contact
+                        string? deleteMobile = GetValidMobile("Enter mobile to delete (or X to cancel): ");
+                        if (deleteMobile == null) break;
 
-                        // Confirm deletion
-                        Console.Write($"Are you sure you want to delete contact with mobile {deleteMobile}? (Y/N): ");
-                        string confirm = Console.ReadLine();
+                        Console.Write($"Confirm delete {deleteMobile}? (Y/N): ");
+                        string? confirm = Console.ReadLine();
 
                         if (confirm?.Trim().ToUpper() == "Y")
                         {
-                            book.DeleteContact(deleteMobile); // Proceed with deletion
+                            book.DeleteContact(deleteMobile);
+                            book.SaveContacts();
                         }
                         else
                         {
                             Console.WriteLine("Deletion cancelled.");
                         }
                         break;
-                        
-                    case 0: // Exit
+
+                    case 0:
                         Console.WriteLine("Exiting program...");
                         break;
 
-                    default: // Invalid menu choice
-                        Console.WriteLine("Invalid option. Please try again.");
+                    default:
+                        Console.WriteLine("Invalid option.");
                         break;
                 }
 
-            } while (choice != 0); // Keep looping until user chooses Exit
+            } while (choice != 0);
         }
     }
 }

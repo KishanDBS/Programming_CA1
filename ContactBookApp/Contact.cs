@@ -8,10 +8,10 @@ namespace ContactBookApp
     /// </summary>
     public class Contact
     {
-        // Private fields
+        // Private backing field for mobile number
         private string mobileNumber;
 
-        // Public properties with validation
+        // Public properties (auto-implemented)
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Company { get; set; }
@@ -20,9 +20,10 @@ namespace ContactBookApp
 
         /// <summary>
         /// Mobile number property with validation:
-        /// - Must be 9 digits
+        /// - Must be exactly 9 digits
         /// - Must not start with 0
-        /// - Must be positive
+        /// - Must be numeric and positive
+        /// If invalid, throws ArgumentException (caught in Program.cs so app does not crash).
         /// </summary>
         public string MobileNumber
         {
@@ -35,23 +36,30 @@ namespace ContactBookApp
                 }
                 else
                 {
-                    throw new ArgumentException("Invalid mobile number. Must be a 9-digit positive number not starting with 0.");
+                    // Throwing exception here ensures invalid data never gets stored.
+                    // Program.cs catches this and shows a friendly error message.
+                    throw new ArgumentException("Invalid mobile number. Must be 9 digits, not starting with 0.");
                 }
             }
         }
 
-        // Constructor
+        /// <summary>
+        /// Constructor: initializes a new Contact object.
+        /// Validation occurs automatically when setting MobileNumber.
+        /// </summary>
         public Contact(string firstName, string lastName, string company, string mobileNumber, string email, DateTime birthdate)
         {
             FirstName = firstName;
             LastName = lastName;
             Company = company;
-            MobileNumber = mobileNumber; // validation occurs here
+            MobileNumber = mobileNumber; // validation happens here
             Email = email;
             Birthdate = birthdate;
         }
 
-        // Overloaded method example: Show contact summary vs full details
+        /// <summary>
+        /// Overloaded method: shows either summary or full details.
+        /// </summary>
         public string ShowDetails()
         {
             return $"{FirstName} {LastName}, {Company}, {MobileNumber}, {Email}, {Birthdate.ToShortDateString()}";
