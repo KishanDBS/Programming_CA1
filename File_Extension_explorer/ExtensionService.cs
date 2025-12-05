@@ -52,13 +52,19 @@ namespace FileExtensionInfoSystem
         /// This is used for Option 1 in the menu.
         /// </summary>
         public void ListAllExtensions()
+    {
+        Console.WriteLine("\nSupported Extensions with Descriptions:");
+
+        // Print table header
+        Console.WriteLine($"{"Extension",-15} {"Description",-40}");
+        Console.WriteLine(new string('-', 60)); // separator line
+
+        // Print each extension in table format
+        foreach (var info in repository.GetAllExtensionInfos())
         {
-            Console.WriteLine("\nSupported Extensions with Descriptions:");
-            foreach (var info in repository.GetAllExtensionInfos())
-            {
-                Console.WriteLine($"{info.Extension} : {info.Description}");
-            }
+            Console.WriteLine($"{info.Extension,-15} {info.Description,-40}");
         }
+    }
 
         /// <summary>
         /// Displays instructions for using the system.
